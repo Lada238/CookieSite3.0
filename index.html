@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Сирень: украшения и бижутерия</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="tailwind.config.js"></script>
+<script src="theme.js"></script>
+<script src="components.js"></script>
+<script src="jewelry.js"></script>
+<script src="ad-slot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+<style type="text/tailwindcss">
+  @layer components {
+    .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition duration-200 ease-out
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 focus-visible:ring-offset-2 active:scale-95 disabled:opacity-50; }
+    .btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
+    .btn-outline { @apply border border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700; }
+    .card { @apply rounded-2xl border border-brand-200 bg-brand-50 p-5 shadow dark:border-slate-700 dark:bg-slate-800; }
+    .field { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900; }
+    .nav-link { @apply px-3 py-2 text-sm font-medium hover:text-brand-600 focus-visible:ring-2 focus-visible:ring-brand-500; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-100">
+<div id="app">
+
+<!-- 1.2 Навбар -->
+<header class="sticky top-0 z-50 border-b border-slate-200 bg-brand-50/90 backdrop-blur dark:border-slate-700 dark:bg-slate-900/70">
+  <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-2 px-4 py-3">
+    <a href="#" class="text-lg font-bold text-brand-600">Сирень</a>
+    <input id="menu" type="checkbox" class="peer sr-only" aria-label="Меню">
+    <nav aria-label="Меню" class="order-last hidden basis-full flex-col peer-checked:flex md:order-none md:flex md:basis-auto md:flex-row">
+      <a class="nav-link" href="#">Главная</a><a class="nav-link" href="#about">О нас</a>
+      <a class="nav-link" href="#services">Преимущества</a><a class="nav-link" href="catalog.html">Каталог</a><a class="nav-link" href="#contact">Контакты</a>
+    </nav>
+    <div class="flex items-center gap-2">
+      <button data-theme class="btn btn-outline" aria-label="Тема"><span class="dark:hidden"><i class="ic ic-moon"></i></span><span class="hidden dark:inline"><i class="ic ic-sun"></i></span></button>
+      <a href="app.html" class="btn btn-primary hidden sm:inline-flex">Войти</a>
+      <label for="menu" class="btn btn-outline cursor-pointer md:hidden">Меню</label>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- 2.1 Hero -->
+<section class="relative overflow-hidden bg-slate-900 bg-cover bg-center py-24 text-center text-white" style="background-image:url('https://images.unsplash.com/photo-1654699991520-aaaf4dd2608b?w=1600&q=80&auto=format&fit=crop')">
+  <div class="absolute inset-0 bg-slate-900/70"></div>
+  <div class="absolute -left-20 top-0 h-72 w-72 animate-pulse rounded-full bg-brand-500/40 blur-3xl"></div>
+  <div class="absolute -right-20 bottom-0 h-72 w-72 animate-pulse rounded-full bg-peach-300/40 blur-3xl"></div>
+  <div class="relative mx-auto max-w-3xl animate-fade-up px-4">
+    <h1 class="bg-gradient-to-r from-brand-300 to-peach-200 bg-clip-text text-4xl font-extrabold text-transparent sm:text-6xl">Украшения, которые хочется носить</h1>
+    <p class="mt-4 text-lg text-slate-200">Серебро, позолота и жемчуг для каждого дня и для особых случаев. Подарочная упаковка и доставка по Беларуси.</p>
+    <div class="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
+      <a href="catalog.html" class="btn btn-primary">Смотреть каталог</a>
+      <a href="#about" class="btn border border-white/60 hover:bg-white/10">Подробнее</a>
+    </div>
+  </div>
+</section>
+
+<!-- 3.3 Features -->
+<section id="services" class="mx-auto grid max-w-6xl gap-4 px-4 py-14 md:grid-cols-3">
+  <article class="card text-center"><span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-200">1</span><h2 class="mt-2 font-semibold">Серебро 925</h2><p class="text-sm text-slate-500">Проба и материал указаны в карточке каждого украшения.</p></article>
+  <article class="card text-center"><span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-200">2</span><h2 class="mt-2 font-semibold">Подарочная упаковка</h2><p class="text-sm text-slate-500">Каждое украшение приезжает в коробке с лентой.</p></article>
+  <article class="card text-center"><span class="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-brand-100 text-sm font-bold text-brand-700 dark:bg-brand-500/20 dark:text-brand-200">3</span><h2 class="mt-2 font-semibold">Доставка по Беларуси</h2><p class="text-sm text-slate-500">Курьером и в пункты выдачи, обычно за 1–3 дня.</p></article>
+</section>
+
+<!-- Реклама: баннер между блоками -->
+<section aria-label="Реклама" class="mx-auto flex max-w-6xl justify-center px-4 pb-14">
+  <ad-slot type="banner"></ad-slot>
+</section>
+
+<!-- 1.3 Сетка товаров -->
+<section class="mx-auto max-w-6xl px-4 pb-14">
+  <div class="mb-4 flex flex-wrap items-end justify-between gap-2"><h2 class="text-2xl font-bold">Украшения</h2><a href="catalog.html" class="text-sm font-medium text-brand-600 hover:underline">Весь каталог</a></div>
+  <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+    <li v-for="p in products" :key="p.id" @click="sel = p" class="product group flex cursor-pointer flex-col gap-2 transition duration-200 hover:-translate-y-1 hover:shadow-lg">
+      <div class="overflow-hidden rounded-xl"><img :src="p.img" :alt="p.name" @error="jewelryImgError($event, p)" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"></div>
+      <h3 class="font-medium"><button type="button" @click.stop="sel = p" class="text-left hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">{{ p.name }}</button></h3>
+      <p class="text-sm leading-5 text-slate-500">{{ p.short }}</p>
+      <p class="mt-auto pt-1 text-lg font-bold">{{ p.price }} <span class="byn">Б</span></p>
+      <button class="btn btn-primary" @click.stop>В корзину</button></li>
+  </ul>
+</section>
+
+<!-- 1.1 Карточка профиля -->
+<section id="about" class="mx-auto max-w-6xl px-4 pb-14">
+  <h2 class="mb-4 text-2xl font-bold">О нас</h2>
+  <div class="flex flex-col items-start gap-6 lg:flex-row">
+  <article class="card w-full space-y-3 text-center shadow-lg sm:w-80">
+    <img src="data:image/jpeg;base64,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" alt="Фото Ивана" class="mx-auto h-20 w-20 rounded-full object-cover">
+    <div><h3 class="font-semibold">Кот Котикович</h3><p class="text-sm text-brand-600">Хранитель витрины</p></div>
+    <p class="text-sm text-slate-500">Следит, чтобы каждое украшение блестело, а заказ ушёл вовремя. Мы работаем в Минске с 2018 года.</p>
+    <div class="flex gap-2"><button class="btn btn-primary flex-1">Подписаться</button><button class="btn btn-outline flex-1">Написать</button></div>
+  </article>
+  <ad-slot type="sidebar"></ad-slot>
+  </div>
+</section>
+
+<!-- 3.3 Отзывы (3 блока) -->
+<section class="mx-auto max-w-6xl px-4 pb-14">
+  <div class="mb-5 flex flex-wrap items-end justify-between gap-3">
+    <h2 class="text-2xl font-bold">Отзывы</h2>
+    <p class="flex items-center gap-3 text-sm text-slate-500">
+      <span class="text-4xl font-extrabold text-slate-900 dark:text-slate-100">{{ avg }}</span>
+      <span><span class="block text-lg text-warning" aria-hidden="true">★★★★★</span>{{ reviews.length }} отзыва</span>
+    </p>
+  </div>
+  <div class="grid gap-4 md:grid-cols-3">
+    <article v-for="r in reviews" :key="r.name" class="card relative flex flex-col gap-3">
+      <span class="pointer-events-none absolute right-4 top-2 select-none font-serif text-6xl leading-none text-brand-200 dark:text-slate-700" aria-hidden="true">”</span>
+      <div class="flex items-center gap-3">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-sm font-bold" :class="r.tone">{{ r.name[0] }}</span>
+        <div class="min-w-0"><p class="truncate font-semibold">{{ r.name }}</p><p class="truncate text-xs text-slate-500">{{ r.city }} · {{ r.date }}</p></div>
+      </div>
+      <p class="flex flex-wrap items-center gap-2">
+        <span class="text-lg tracking-wide" role="img" :aria-label="'Оценка ' + r.rating + ' из 5'"><span v-for="i in 5" :key="i" :class="i <= r.rating ? 'text-warning' : 'text-slate-300 dark:text-slate-600'">★</span></span>
+        <span class="badge badge-success">Проверенная покупка</span>
+      </p>
+      <h3 class="font-semibold">{{ r.title }}</h3>
+      <p class="text-sm leading-6 text-slate-600 dark:text-slate-300">{{ r.text }}</p>
+      <p class="mt-auto border-t border-slate-200 pt-3 text-xs text-slate-500 dark:border-slate-700">Отзыв оказался полезным: {{ r.helpful }}</p>
+    </article>
+  </div>
+</section>
+
+<!-- 2.2 Подарочные сертификаты -->
+<section id="pricing" class="mx-auto max-w-6xl px-4 pb-14">
+  <h2 class="mb-6 text-2xl font-bold">Подарочные сертификаты</h2>
+  <div class="grid items-center gap-6 lg:grid-cols-3">
+    <article class="card"><h3 class="font-semibold">Лёгкий</h3><p class="my-2 text-3xl font-bold">50 <span class="byn">Б</span></p>
+      <ul class="divide-y divide-slate-200 text-sm dark:divide-slate-700"><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Подходит для серёг и бижутерии</li><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Действует 6 месяцев</li><li class="py-2"><i class="ic ic-x mr-1 text-slate-400"></i>Подарочный конверт</li></ul></article>
+    <article class="card relative ring-2 ring-brand-500 lg:scale-105"><span class="absolute -top-3 left-5 rounded-full bg-brand-600 px-3 py-0.5 text-xs text-white">Хит</span><h3 class="font-semibold">Классический</h3><p class="my-2 text-3xl font-bold">100 <span class="byn">Б</span></p>
+      <ul class="divide-y divide-slate-200 text-sm dark:divide-slate-700"><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Кольца, браслеты и подвески</li><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Действует 12 месяцев</li><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Фирменная коробка с лентой</li></ul></article>
+    <article class="card"><h3 class="font-semibold">Особый случай</h3><p class="my-2 text-3xl font-bold">300 <span class="byn">Б</span></p>
+      <ul class="divide-y divide-slate-200 text-sm dark:divide-slate-700"><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Любое украшение из каталога</li><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Действует 12 месяцев</li><li class="py-2"><i class="ic ic-check mr-1 text-brand-600"></i>Личный консультант и гравировка</li></ul></article>
+  </div>
+</section>
+
+<!-- 3.3 FAQ (details + group-open) -->
+<section class="mx-auto max-w-3xl space-y-2 px-4 pb-14">
+  <h2 class="mb-4 text-2xl font-bold">Вопросы</h2>
+  <details class="card group"><summary class="flex cursor-pointer list-none justify-between font-medium">Как узнать размер кольца?<span class="transition group-open:rotate-180">⌄</span></summary><p class="mt-2 text-sm text-slate-500">Измерьте нитью обхват пальца, приложите к линейке и сверьтесь с таблицей размеров в карточке товара.</p></details>
+  <details class="card group"><summary class="flex cursor-pointer list-none justify-between font-medium">Можно ли вернуть украшение?<span class="transition group-open:rotate-180">⌄</span></summary><p class="mt-2 text-sm text-slate-500">Да, в течение 14 дней, если изделие не носили и сохранили упаковку.</p></details>
+</section>
+
+<!-- 2.4 Форма регистрации (Vue: v-model, computed, watch) -->
+<section id="contact" class="mx-auto max-w-md px-4 pb-14">
+  <form ref="form" @submit.prevent="submit" class="card space-y-4" novalidate>
+    <h2 class="text-2xl font-bold">Регистрация</h2>
+    <p class="text-sm text-slate-500">Скидка 5% на первый заказ и новости о новых украшениях.</p>
+    <label class="block text-sm font-medium">Email
+      <input v-model="email" type="email" required placeholder=" " class="field peer mt-1 [&:not(:placeholder-shown):invalid]:border-danger">
+      <span class="hidden text-xs text-danger peer-[:not(:placeholder-shown):invalid]:block">Введите корректный email</span></label>
+    <label class="block text-sm font-medium">Пароль
+      <input v-model="pw" type="password" required minlength="8" placeholder=" " class="field peer mt-1 [&:not(:placeholder-shown):invalid]:border-danger">
+      <span class="hidden text-xs text-danger peer-[:not(:placeholder-shown):invalid]:block">Минимум 8 символов</span></label>
+    <div class="flex gap-1" aria-hidden="true"><i v-for="i in 4" :key="i" class="h-1.5 flex-1 rounded" :class="i <= strength ? colors[strength - 1] : 'bg-slate-200 dark:bg-slate-700'"></i></div>
+    <label class="block text-sm font-medium">Подтвердите пароль
+      <input ref="pw2El" v-model="pw2" type="password" required placeholder=" " class="field peer mt-1 [&:not(:placeholder-shown):invalid]:border-danger">
+      <span class="hidden text-xs text-danger peer-[:not(:placeholder-shown):invalid]:block">Пароли не совпадают</span></label>
+    <label class="flex items-center gap-2 text-sm"><input v-model="agree" type="checkbox" required class="h-4 w-4 accent-brand-600 focus-visible:ring-2"> Согласен с правилами</label>
+    <button class="btn btn-primary group w-full" :data-loading="loading || null" :disabled="loading">
+      <span class="hidden h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent group-data-[loading]:inline-block"></span>Зарегистрироваться</button>
+    <p v-if="done" class="text-center text-sm text-success">Готово! Скидка 5% уже ждёт вас.</p>
+  </form>
+</section>
+</main>
+
+<product-modal :item="sel" @close="sel = null"></product-modal>
+
+<!-- Footer -->
+<footer class="border-t border-slate-200 bg-brand-50 py-10 dark:border-slate-700 dark:bg-slate-800">
+  <div class="mx-auto grid max-w-6xl grid-cols-2 gap-6 px-4 text-sm md:grid-cols-4">
+    <div><h3 class="font-semibold">Сирень</h3><p class="text-slate-500">Украшения и бижутерия, Минск</p></div>
+    <div><h3 class="font-semibold">Разделы</h3><p class="space-y-1 text-slate-500"><a class="block hover:text-brand-600" href="dashboard.html">Дашборд</a><a class="block hover:text-brand-600" href="form.html">Форма</a><a class="block hover:text-brand-600" href="catalog.html">Каталог</a><a class="block hover:text-brand-600" href="design.html">Дизайн-система</a></p></div>
+    <div><h3 class="font-semibold">Помощь</h3><p class="text-slate-500">Доставка, возврат, контакты</p></div>
+    <div><h3 class="font-semibold">Соцсети</h3><p class="text-slate-500">Instagram, Telegram</p></div>
+  </div>
+</footer>
+
+</div>
+<script>
+const { createApp, ref, computed, watch } = Vue;
+createApp({
+  setup() {
+    // 1.3: товары (цены в белорусских рублях) + картинки с Unsplash
+    // украшения берём из общего файла jewelry.js
+    const sel = ref(null);   // выбранный товар для окна
+    const products = [0, 2, 4, 7, 8, 10, 13, 15].map(i => JEWELRY[i]);
+    // Отзывы: данные для карточек
+    const tones = ['bg-brand-100 text-brand-700 dark:bg-brand-500/20 dark:text-brand-200', 'bg-peach-200 text-peach-700 dark:bg-peach-200/20 dark:text-peach-200', 'bg-mist-200 text-mist-700 dark:bg-mist-200/20 dark:text-mist-200'];
+    const reviews = [
+      { name: 'Анна Ковалёва', city: 'Минск', date: '12.10.2026', rating: 5, title: 'Кольцо как на фото', text: 'Заказала серебряное кольцо, пришло в коробке с лентой. Серебро без запаха и не темнеет, размер подошёл. Маме понравилось.', helpful: 14 },
+      { name: 'Олег Новик', city: 'Гродно', date: '03.10.2026', rating: 5, title: 'Хороший подарок жене', text: 'Выбирал серьги с жемчугом по описанию, на фото всё совпало. Доставили за два дня, упаковка подарочная, ничего не помялось.', helpful: 9 },
+      { name: 'Мария Сидорова', city: 'Брест', date: '27.09.2026', rating: 4, title: 'Браслет подошёл по размеру', text: 'Позолота лежит ровно, застёжка надёжная. Хотелось бы больше размеров, но поддержка помогла подобрать нужный.', helpful: 6 }
+    ].map((r, i) => ({ ...r, tone: tones[i % 3] }));
+    const avg = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1).replace('.', ',');
+    // 2.4: форма
+    const email = ref(''), pw = ref(''), pw2 = ref(''), agree = ref(false), loading = ref(false), done = ref(false);
+    const form = ref(null), pw2El = ref(null);
+    const colors = ['bg-danger', 'bg-warning', 'bg-info', 'bg-success'];
+    const strength = computed(() => { const v = pw.value; return (v.length >= 8) + /[A-Z]/.test(v) + /\d/.test(v) + /\W/.test(v); });
+    watch([pw, pw2], () => pw2El.value && pw2El.value.setCustomValidity(pw2.value === pw.value ? '' : 'x'));
+    function submit() {
+      if (!form.value.checkValidity()) { form.value.reportValidity(); return; }
+      loading.value = true;
+      setTimeout(() => { loading.value = false; done.value = true; }, 1500);
+    }
+    return { jewelryImgError, sel, reviews, avg, products, email, pw, pw2, agree, loading, done, form, pw2El, colors, strength, submit };
+  }
+}).component('AdSlot', AdSlot).component('ProductModal', ProductModal).mount('#app');
+</script>
+</body></html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="tailwind.config.js"></script><script src="theme.js"></script><script src="components.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+<title>Дизайн-система</title>
+</head>
+<body data-nav class="bg-slate-50 text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-100">
+<div id="app">
+<main class="mx-auto max-w-5xl space-y-10 px-4 py-8">
+  <header><h1 class="h1">Дизайн-система</h1><p class="body mt-1">Мини-набор компонентов на Tailwind: @layer components, @apply, свой plugin (scrollbar-thin).</p></header>
+
+  <section aria-labelledby="c"><h2 id="c" class="h2 mb-3">Цвета</h2>
+    <div class="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-8"><div v-for="c in colors" :key="c[0]"><div class="h-14 rounded-lg border border-slate-200 dark:border-slate-600" :class="c[1]"></div><p class="mt-1 text-xs">{{ c[0] }}</p></div></div></section>
+
+  <section aria-labelledby="t"><h2 id="t" class="h2 mb-3">Типографика</h2>
+    <div class="card space-y-2"><p class="h1">Заголовок h1</p><p class="h2">Заголовок h2</p><p class="body">Основной текст body: короткие абзацы читаются лучше длинных.</p></div></section>
+
+  <section aria-labelledby="b"><h2 id="b" class="h2 mb-3">Кнопки</h2>
+    <div class="card scrollbar-thin overflow-x-auto"><table class="text-sm"><tbody><tr v-for="v in variants" :key="v"><th class="pr-4 text-left font-medium text-slate-500">{{ v }}</th><td v-for="z in sizes" :key="z" class="p-1.5"><button class="btn" :class="['btn-' + v, 'btn-' + z]">Кнопка {{ z }}</button></td><td class="p-1.5"><button class="btn btn-md" :class="'btn-' + v" disabled>disabled</button></td></tr></tbody></table></div></section>
+
+  <section aria-labelledby="i"><h2 id="i" class="h2 mb-3">Поля ввода</h2>
+    <div class="card grid gap-4 sm:grid-cols-2">
+      <label class="text-sm font-medium">Обычное<input class="input mt-1" placeholder="Текст"></label>
+      <label class="text-sm font-medium">С ошибкой<input class="input mt-1" aria-invalid="true" value="неверно"></label>
+      <label class="flex items-center gap-2 text-sm"><input type="checkbox" class="h-4 w-4 accent-brand-600" checked>Чекбокс</label>
+      <label class="flex cursor-pointer items-center gap-3 text-sm"><span class="relative inline-flex"><input type="checkbox" class="peer sr-only" role="switch">
+        <span class="h-6 w-11 rounded-full bg-slate-300 transition-colors peer-checked:bg-brand-600 peer-focus-visible:ring-2 peer-focus-visible:ring-brand-500 after:absolute after:left-0.5 after:top-0.5 after:h-5 after:w-5 after:rounded-full after:bg-white after:transition peer-checked:after:translate-x-5"></span></span>Toggle</label>
+    </div></section>
+
+  <section aria-labelledby="m"><h2 id="m" class="h2 mb-3">Badge и Alert</h2>
+    <div class="card space-y-3"><p class="flex flex-wrap gap-2"><span class="badge badge-success">Успех</span><span class="badge badge-warning">Внимание</span><span class="badge badge-error">Ошибка</span></p>
+      <p class="alert alert-info" role="status">Информационное сообщение.</p><p class="alert alert-success" role="status">Всё сохранено.</p><p class="alert alert-error" role="alert">Что-то пошло не так.</p></div></section>
+
+  <section aria-labelledby="k"><h2 id="k" class="h2 mb-3">Card и Modal</h2>
+    <div class="grid gap-4 sm:grid-cols-2">
+      <article class="card"><h3 class="font-semibold">Карточка</h3><p class="body mt-1">Класс <code>.card</code> с рамкой и тенью.</p><button @click="dlg.showModal()" class="btn btn-primary btn-md mt-3">Открыть модальное окно</button></article>
+      <article class="card"><h3 class="font-semibold">Цена</h3><p class="mt-1 text-2xl font-bold">125 <span class="byn">Б</span></p><p class="body">Знак белорусского рубля: <code>.byn</code>.</p></article>
+    </div></section>
+</main>
+
+<dialog id="dlg" ref="dlg" aria-labelledby="dt" class="w-[calc(100%-2rem)] max-w-sm rounded-2xl p-0 backdrop:bg-slate-900/50 backdrop:backdrop-blur-sm dark:bg-slate-800 dark:text-slate-100">
+  <div class="space-y-3 p-6"><h2 id="dt" class="h2">Модальное окно</h2><p class="body">Закрывается кнопкой или клавишей Esc.</p>
+    <div class="flex justify-end gap-2"><button class="btn btn-secondary btn-md" @click="dlg.close()">Отмена</button><button class="btn btn-primary btn-md" @click="dlg.close()">ОК</button></div></div>
+</dialog>
+
+</div>
+<script>
+const { createApp, ref } = Vue;
+createApp({
+  setup() {
+    const colors = [['brand-600', 'bg-brand-600'], ['brand-500', 'bg-brand-500'], ['brand-50', 'bg-brand-50'], ['success', 'bg-success'], ['warning', 'bg-warning'], ['danger', 'bg-danger'], ['info', 'bg-info'], ['slate-900', 'bg-slate-900']];
+    const variants = ['primary', 'secondary', 'ghost', 'danger'], sizes = ['sm', 'md', 'lg'];
+    const dlg = ref(null);
+    return { colors, variants, sizes, dlg };
+  }
+}).mount('#app');
+</script>
+</body></html>

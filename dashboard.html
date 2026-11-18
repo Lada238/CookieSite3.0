@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="tailwind.config.js"></script><script src="theme.js"></script><script src="components.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+<title>Дашборд</title>
+</head>
+<body class="bg-slate-50 text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-100">
+<div id="app">
+<input id="side" type="checkbox" class="peer sr-only" aria-label="Боковое меню">
+<aside class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full space-y-1 border-r border-slate-200 bg-brand-50 p-4 transition-transform duration-300 peer-checked:translate-x-0 lg:translate-x-0 dark:border-slate-700 dark:bg-slate-900">
+  <p class="mb-4 text-lg font-bold text-brand-600">Analytics</p>
+  <nav aria-label="Разделы" class="space-y-1 text-sm">
+    <a class="block rounded-lg bg-brand-100 px-3 py-2 font-medium text-brand-700 dark:bg-slate-800" href="#">Обзор</a>
+    <a class="block rounded-lg px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="app.html">Панель</a>
+    <a class="block rounded-lg px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="catalog.html">Каталог</a>
+    <a class="block rounded-lg px-3 py-2 hover:bg-slate-100 dark:hover:bg-slate-800" href="index.html">На главную</a>
+  </nav>
+</aside>
+<div class="lg:pl-64">
+  <header class="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-brand-200/60 px-4 py-3 backdrop-blur dark:border-slate-700 dark:bg-slate-900/70">
+    <label for="side" class="btn btn-secondary btn-md cursor-pointer lg:hidden">Меню</label>
+    <h1 class="text-lg font-semibold">Дашборд</h1>
+    <button data-theme class="btn btn-secondary btn-sm ml-auto" aria-label="Тема"><span class="dark:hidden"><i class="ic ic-moon"></i></span><span class="hidden dark:inline"><i class="ic ic-sun"></i></span></button>
+  </header>
+  <main class="grid grid-cols-12 gap-4 p-4 2xl:mx-auto 2xl:max-w-[1800px]">
+    <section class="col-span-12 grid grid-cols-12 gap-4">
+      <article v-for="x in stats" :key="x.n" class="group card col-span-12 transition hover:-translate-y-1 hover:shadow-md sm:col-span-6 xl:col-span-3">
+        <p class="text-sm text-slate-500">{{ x.n }}</p>
+        <p class="mt-1 truncate text-2xl font-bold">{{ x.v }} <span v-if="x.money" class="byn">Б</span></p>
+        <p class="mt-1 text-sm font-medium" :class="x.t[0] === '+' ? 'text-success' : 'text-danger'">{{ x.t[0] === '+' ? '▲' : '▼' }} {{ x.t }} <span class="text-slate-400">за месяц</span></p>
+      </article>
+    </section>
+    <section class="card col-span-12 min-w-0 xl:col-span-8">
+      <h2 class="mb-3 font-semibold">Продажи по месяцам</h2>
+      <div class="grid h-48 grid-cols-12 gap-1" role="img" aria-label="График продаж">
+        <div v-for="(n, i) in sales" :key="i" class="group flex flex-col-reverse gap-1" :title="'Месяц ' + (i + 1)">
+          <span v-for="l in 5" :key="l" class="flex-1 rounded-sm transition-colors" :class="l <= n ? 'bg-brand-500 group-hover:bg-brand-700' : 'bg-slate-200 dark:bg-slate-700'"></span>
+        </div>
+      </div>
+    </section>
+    <section class="card col-span-12 min-w-0 xl:col-span-4">
+      <h2 class="mb-3 font-semibold">Топ клиентов</h2>
+      <ul class="space-y-2 text-sm"><li v-for="c in best" :key="c[0]" class="flex items-center justify-between gap-2"><span class="min-w-0 truncate">{{ c[0] }}</span><span class="font-medium">{{ c[1] }} <span class="byn">Б</span></span></li></ul>
+    </section>
+    <section class="card col-span-12 min-w-0">
+      <div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center">
+        <h2 class="font-semibold sm:flex-1">Последние транзакции</h2>
+        <input v-model="q" type="search" placeholder="Поиск по клиенту" aria-label="Поиск" class="input sm:w-56">
+        <select v-model="st" aria-label="Статус" class="input sm:w-40"><option value="">Все статусы</option><option>Оплачен</option><option>Ожидает</option><option>Отклонён</option></select>
+      </div>
+      <div class="scrollbar-thin overflow-x-auto">
+        <table class="w-full min-w-[560px] text-left text-sm">
+          <thead class="border-b border-slate-200 text-slate-500 dark:border-slate-700"><tr><th class="py-2">№</th><th>Клиент</th><th>Дата</th><th class="text-right">Сумма</th><th class="pl-4">Статус</th></tr></thead>
+          <tbody class="divide-y divide-slate-100 dark:divide-slate-700">
+            <tr v-for="r in list" :key="r[0]" class="group transition-colors hover:bg-slate-50 dark:hover:bg-slate-700/40">
+              <td class="py-2 text-slate-500">#{{ r[0] }}</td><td class="max-w-[10rem] truncate">{{ r[1] }}</td><td>{{ r[2] }}</td>
+              <td class="text-right font-medium">{{ r[3].toFixed(2) }} <span class="byn">Б</span></td><td class="pl-4"><span class="badge" :class="cls[r[4]]">{{ r[4] }}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p v-if="!list.length" class="py-6 text-center text-slate-500">Ничего не найдено</p>
+    </section>
+  </main>
+</div>
+</div>
+<script>
+const { createApp, ref, computed } = Vue;
+createApp({
+  setup() {
+    const stats = [{ n: 'Выручка', v: '12 340', t: '+12%', money: true }, { n: 'Заказы', v: '1 284', t: '+5%' }, { n: 'Клиенты', v: '842', t: '-3%' }, { n: 'Возвраты', v: '24', t: '-8%' }];
+    const sales = [2, 3, 3, 4, 2, 3, 4, 5, 4, 3, 5, 4];
+    const best = [['ООО «Альфа»', 3200], ['ИП Ковалёв', 2150], ['Мария Сидорова', 1840], ['ЗАО «Бета-Групп»', 1320]];
+    const tx = [[1041, 'Иван Петров', '10.11.2026', 245.5, 'Оплачен'], [1042, 'ООО «Альфа»', '10.11.2026', 1200, 'Ожидает'], [1043, 'Мария Сидорова', '09.11.2026', 89.9, 'Оплачен'],
+      [1044, 'Олег Новик', '08.11.2026', 560, 'Отклонён'], [1045, 'ИП Ковалёв', '08.11.2026', 780, 'Оплачен'], [1046, 'Анна Козлова', '07.11.2026', 99, 'Ожидает'],
+      [1047, 'Павел Орлов', '06.11.2026', 310.2, 'Оплачен'], [1048, 'Елена Волк', '05.11.2026', 45, 'Оплачен']];
+    const cls = { 'Оплачен': 'badge-success', 'Ожидает': 'badge-warning', 'Отклонён': 'badge-error' };
+    const q = ref(''), st = ref('');
+    const list = computed(() => tx.filter(r => r[1].toLowerCase().includes(q.value.trim().toLowerCase()) && (!st.value || r[4] === st.value)));
+    return { stats, sales, best, cls, q, st, list };
+  }
+}).mount('#app');
+</script>
+</body></html>

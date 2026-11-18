@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ru"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.tailwindcss.com?plugins=container-queries"></script>
+<script src="tailwind.config.js"></script><script src="theme.js"></script><script src="components.js"></script>
+<script src="jewelry.js"></script><script src="ad-slot.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+<title>Каталог украшений</title>
+</head>
+<body data-nav class="bg-slate-50 text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-100">
+<div id="app">
+<input id="drawer" type="checkbox" class="peer sr-only" aria-label="Фильтры">
+<label for="drawer" class="fixed inset-0 z-30 hidden bg-slate-900/40 backdrop-blur-sm peer-checked:block lg:!hidden" aria-hidden="true"></label>
+
+<main class="mx-auto flex max-w-6xl gap-6 px-4 py-6">
+  <!-- Фильтры: на телефоне drawer снизу, на lg обычная колонка -->
+  <aside aria-label="Фильтры" class="scrollbar-thin fixed inset-x-0 bottom-0 z-40 max-h-[80vh] translate-y-full space-y-5 overflow-y-auto rounded-t-2xl bg-brand-100 p-5 shadow-xl transition-transform duration-300 peer-checked:translate-y-0 lg:static lg:max-h-none lg:w-60 lg:shrink-0 lg:translate-y-0 lg:rounded-2xl lg:border lg:border-slate-200 lg:shadow-none dark:bg-slate-800 lg:dark:border-slate-700">
+    <fieldset><legend class="mb-2 font-semibold">Категория</legend><div class="space-y-1 text-sm"><label v-for="c in cats" :key="c" class="flex items-center gap-2"><input type="checkbox" :value="c" v-model="selCats" class="h-4 w-4 accent-brand-600">{{ c }}</label></div></fieldset>
+    <div><label for="price" class="mb-2 block font-semibold">Цена до: {{ price }} <span class="byn">Б</span></label>
+      <input id="price" v-model.number="price" type="range" min="10" max="150" step="5" class="w-full accent-brand-600"></div>
+    <fieldset><legend class="mb-2 font-semibold">Теги</legend><div class="flex flex-wrap gap-2 text-sm"><label v-for="t in tagList" :key="t" class="cursor-pointer rounded-full border border-slate-300 px-3 py-1 transition-colors has-[:checked]:border-brand-600 has-[:checked]:bg-brand-600 has-[:checked]:text-white dark:border-slate-600"><input type="checkbox" :value="t" v-model="selTags" class="sr-only">{{ t }}</label></div></fieldset>
+    <div class="hidden lg:block"><ad-slot type="sidebar"></ad-slot></div>
+    <label for="drawer" class="btn btn-primary btn-md w-full cursor-pointer lg:hidden">Показать результаты</label>
+  </aside>
+
+  <section class="min-w-0 flex-1">
+    <div class="mb-4 flex items-center gap-2">
+      <h1 class="h2 flex-1">Украшения <span class="text-base font-normal text-slate-500">({{ result.length }})</span></h1>
+      <label for="drawer" class="btn btn-secondary btn-md cursor-pointer lg:hidden">Фильтры</label>
+      <select v-model="sort" aria-label="Сортировка" class="input w-auto"><option value="p">Сначала дешёвые</option><option value="d">Сначала дорогие</option><option value="n">По названию</option></select>
+    </div>
+    <div class="@container">
+      <ul class="grid grid-cols-1 gap-4 @md:grid-cols-2 @3xl:grid-cols-3">
+        <template v-if="loading"><li v-for="n in 6" :key="n" class="product h-64 animate-pulse !bg-slate-200 dark:!bg-slate-700"></li></template>
+        <template v-else>
+          <template v-for="x in shownWithAd" :key="x.ad ? 'ad' : x.id">
+            <ad-slot v-if="x.ad" type="native"></ad-slot>
+            <li v-else @click="sel = x" class="product group flex cursor-pointer flex-col gap-2 transition hover:-translate-y-1 hover:shadow-lg">
+              <div class="overflow-hidden rounded-xl"><img :src="x.img" :alt="x.name" @error="jewelryImgError($event, x)" class="aspect-[4/3] w-full object-cover transition duration-500 group-hover:scale-105"></div>
+              <h2 class="font-medium"><button type="button" @click.stop="sel = x" class="text-left hover:text-brand-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500">{{ x.name }}</button></h2>
+              <p class="text-sm leading-5 text-slate-500">{{ x.short }}</p>
+              <p class="flex flex-wrap gap-1"><span v-for="t in x.tags" :key="t" class="badge badge-warning">{{ t }}</span><span class="badge bg-slate-100 dark:bg-slate-700">{{ x.cat }}</span></p>
+              <p class="mt-auto text-lg font-bold">{{ x.price }} <span class="byn">Б</span></p>
+              <button class="btn btn-primary btn-md" @click.stop>В корзину</button></li>
+          </template>
+        </template>
+      </ul>
+    </div>
+    <p v-if="!loading && !result.length" class="card py-10 text-center text-slate-500">Нет товаров по таким фильтрам</p>
+    <nav aria-label="Страницы" class="mt-6 flex justify-center gap-1"><button v-for="n in pages" :key="n" @click="go(n)" :aria-current="n === page ? 'page' : null" class="btn btn-sm" :class="n === page ? 'btn-primary' : 'btn-secondary'">{{ n }}</button></nav>
+  </section>
+</main>
+
+<product-modal :item="sel" @close="sel = null"></product-modal>
+
+</div>
+<script>
+const { createApp, ref, computed, watch } = Vue;
+createApp({
+  setup() {
+    // Украшения и бижутерия берём из общего файла jewelry.js (цены в белорусских рублях)
+    const items = JEWELRY;
+    const tagList = ['Новинка', 'Хит', 'Скидка'], cats = [...new Set(items.map(x => x.cat))];
+    const PER = 5;   // 5 товаров + 1 рекламная карточка = 6 клеток на странице
+    const sel = ref(null);   // выбранный товар для окна
+    const selCats = ref([]), selTags = ref([]), price = ref(150), sort = ref('p'), page = ref(1), loading = ref(true);
+    const result = computed(() => items
+      .filter(x => (!selCats.value.length || selCats.value.includes(x.cat)) && x.price <= price.value && (!selTags.value.length || x.tags.some(t => selTags.value.includes(t))))
+      .sort((a, b) => sort.value === 'p' ? a.price - b.price : sort.value === 'd' ? b.price - a.price : a.name.localeCompare(b.name)));
+    const pages = computed(() => Math.max(1, Math.ceil(result.value.length / PER)));
+    const shown = computed(() => result.value.slice((page.value - 1) * PER, page.value * PER));
+    // рекламная карточка встаёт четвёртой, только если товаров достаточно
+    const shownWithAd = computed(() => { const a = [...shown.value]; if (a.length > 3) a.splice(3, 0, { ad: true }); return a; });
+    function load() { loading.value = true; setTimeout(() => loading.value = false, 400); }   // skeleton
+    watch([selCats, selTags, sort], () => { page.value = 1; load(); });
+    watch(price, () => page.value = 1);
+    function go(n) { page.value = n; scrollTo({ top: 0, behavior: 'smooth' }); }
+    load();
+    return { jewelryImgError, sel, cats, tagList, selCats, selTags, price, sort, page, loading, result, pages, shownWithAd, go };
+  }
+}).component('AdSlot', AdSlot).component('ProductModal', ProductModal).mount('#app');
+</script>
+</body></html>

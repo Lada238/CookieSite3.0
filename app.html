@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Панель</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="tailwind.config.js"></script>
+<script src="theme.js"></script>
+<script src="components.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@3.5.13/dist/vue.global.prod.js"></script>
+<style type="text/tailwindcss">
+  @layer components {
+    .btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition duration-200 ease-out
+           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500 active:scale-95 disabled:opacity-50; }
+    .btn-primary { @apply bg-brand-600 text-white hover:bg-brand-700; }
+    .btn-outline { @apply border border-slate-300 hover:bg-slate-100 dark:border-slate-600 dark:hover:bg-slate-700; }
+    .card { @apply rounded-2xl border border-brand-200 bg-brand-50 p-4 shadow dark:border-slate-700 dark:bg-slate-800; }
+    .field { @apply w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 dark:border-slate-600 dark:bg-slate-900; }
+    .side-link { @apply flex items-center gap-3 rounded-lg px-3 py-2 text-sm hover:bg-slate-100 focus-visible:ring-2 focus-visible:ring-brand-500 dark:hover:bg-slate-800; }
+  }
+</style>
+</head>
+<body class="bg-slate-50 text-slate-900 transition-colors dark:bg-slate-900 dark:text-slate-100">
+<div id="app">
+<input id="side" type="checkbox" class="peer sr-only" aria-label="Боковое меню">
+
+<!-- 2.3 Sidebar 256px (на мобильных скрыт) -->
+<aside class="fixed inset-y-0 left-0 z-40 h-screen w-64 -translate-x-full space-y-1 overflow-y-auto border-r border-slate-200 bg-brand-100 p-4 transition-transform duration-300 peer-checked:translate-x-0 md:translate-x-0 dark:border-slate-700 dark:bg-slate-900">
+  <p class="mb-4 text-lg font-bold text-brand-600">MyApp</p>
+  <nav aria-label="Разделы" class="space-y-1">
+    <a class="side-link" href="#stats">Обзор</a>
+    <a class="side-link" href="#chat">Сообщения</a>
+    <a class="side-link" href="#kanban">Задачи</a>
+    <a class="side-link" href="dashboard.html">Дашборд</a>
+    <a class="side-link" href="index.html">На главную</a>
+  </nav>
+</aside>
+
+<div class="md:pl-64">
+  <header class="sticky top-0 z-30 flex items-center gap-3 border-b border-slate-200 bg-brand-200/60 px-4 py-3 backdrop-blur dark:border-slate-700 dark:bg-slate-900/70">
+    <label for="side" class="btn btn-outline cursor-pointer md:hidden">Меню</label>
+    <input type="search" placeholder="Поиск" aria-label="Поиск" class="field max-w-sm flex-1">
+    <button data-theme class="btn btn-outline ml-auto" aria-label="Тема"><span class="dark:hidden"><i class="ic ic-moon"></i></span><span class="hidden dark:inline"><i class="ic ic-sun"></i></span></button>
+    <img src="https://i.pravatar.cc/80?img=5" alt="Аватар" class="h-9 w-9 rounded-full">
+  </header>
+
+  <main class="space-y-10 p-4">
+    <section id="stats" class="grid gap-4 sm:grid-cols-3">
+      <article class="card"><p class="text-sm text-slate-500">Заказы</p><p class="text-2xl font-bold">128</p></article>
+      <article class="card"><p class="text-sm text-slate-500">Клиенты</p><p class="text-2xl font-bold">54</p></article>
+      <article class="card"><p class="text-sm text-slate-500">Доход</p><p class="text-2xl font-bold">12 300 <span class="byn">Б</span></p></article>
+    </section>
+
+    <!-- 3.1 Мессенджер -->
+    <section id="chat">
+      <h2 class="mb-3 text-xl font-bold">Сообщения</h2>
+      <div class="card flex h-96 overflow-hidden p-0">
+        <ul class="w-24 divide-y divide-slate-200 overflow-y-auto sm:w-1/3 dark:divide-slate-700">
+          <li class="flex items-center gap-2 bg-slate-100 p-3 dark:bg-slate-700"><img src="https://i.pravatar.cc/80?img=1" alt="" class="h-10 w-10 rounded-full"><div class="hidden min-w-0 sm:block"><p class="truncate text-sm font-medium">Анна</p><p class="truncate text-xs text-slate-500">Привет! Как дела?</p></div><span class="ml-auto hidden rounded-full bg-brand-600 px-2 text-xs text-white sm:block">2</span></li>
+          <li class="flex items-center gap-2 p-3"><img src="https://i.pravatar.cc/80?img=8" alt="" class="h-10 w-10 rounded-full"><div class="hidden min-w-0 sm:block"><p class="truncate text-sm font-medium">Олег</p><p class="truncate text-xs text-slate-500">Скинь макет</p></div></li>
+        </ul>
+        <div class="flex min-w-0 flex-1 flex-col border-l border-slate-200 dark:border-slate-700">
+          <div ref="box" class="flex-1 space-y-2 overflow-y-auto p-3 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-thumb]:rounded [&::-webkit-scrollbar-thumb]:bg-slate-400">
+            <p v-for="(m, i) in msgs" :key="i" class="max-w-[75%] rounded-2xl px-3 py-2 text-sm" :class="m.me ? 'ml-auto bg-brand-600 text-white' : 'bg-mist-100 text-mist-700 dark:bg-slate-700'">{{ m.text }}<span v-if="m.time" class="ml-2 text-xs text-brand-100">{{ m.time }}</span></p>
+          </div>
+          <form @submit.prevent="send" class="sticky bottom-0 flex gap-2 border-t border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-800">
+            <input v-model="draft" class="field" placeholder="Сообщение" aria-label="Сообщение"><button class="btn btn-primary">Отправить</button>
+          </form>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3.2 Kanban -->
+    <section id="kanban">
+      <h2 class="mb-3 text-xl font-bold">Задачи</h2>
+      <div class="grid gap-4 md:grid-cols-3">
+        <div v-for="n in names" :key="n" @dragover.prevent="over = n" @drop.prevent="drop(n)"
+             class="card min-w-0 bg-slate-100 transition dark:bg-slate-800" :class="{ 'ring-2 ring-brand-500': over === n }">
+          <h3 class="mb-3 flex items-center justify-between font-semibold">{{ n }}<span class="rounded-full bg-slate-300 px-2 text-xs dark:bg-slate-600">{{ col(n).length }}</span></h3>
+          <ul class="min-h-[90px] space-y-2">
+            <li v-for="x in col(n)" :key="x.id" draggable="true" @dragstart="start($event, x.id)" @dragend="dragId = null; over = null"
+                class="group cursor-grab rounded-xl bg-white p-3 shadow-sm active:cursor-grabbing dark:bg-slate-900" :class="{ 'opacity-40': dragId === x.id }">
+              <div class="flex gap-2"><span class="text-slate-400 group-hover:text-brand-600" aria-hidden="true">⠿</span><p class="line-clamp-2 text-sm">{{ x.t }}</p></div>
+              <div class="mt-2 flex items-center gap-2 text-xs"><span class="rounded bg-brand-100 px-2 py-0.5 text-brand-700">{{ x.tag }}</span><span class="rounded px-2 py-0.5" :class="prio[x.p]">{{ x.p }}</span>
+                <img :src="'https://i.pravatar.cc/40?img=' + (x.id + 20)" alt="" class="ml-auto h-6 w-6 rounded-full"></div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+</div>
+<script>
+const { createApp, ref, nextTick } = Vue;
+createApp({
+  setup() {
+    // 3.1 Чат: сообщение добавляется в список и сразу показывается
+    const msgs = ref([{ text: 'Привет! Как дела?' }, { me: true, text: 'Отлично, верстаю на Tailwind и Vue.' }, { text: 'Круто, покажешь?' }, { me: true, text: 'Конечно, завтра.' }]);
+    const draft = ref(''), box = ref(null);
+    function send() {
+      const text = draft.value.trim(); if (!text) return;
+      msgs.value.push({ me: true, text, time: new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' }) });
+      draft.value = '';
+      nextTick(() => box.value.scrollTop = box.value.scrollHeight);
+    }
+    // 3.2 Канбан: перетаскивание между колонками
+    const names = ['To Do', 'In Progress', 'Done'];
+    const prio = { 'Высокий': 'bg-brand-200 text-brand-800', 'Средний': 'bg-peach-200 text-peach-700', 'Низкий': 'bg-mist-200 text-mist-700' };
+    const tasks = ref([
+      { id: 1, t: 'Сделать макет главной страницы и проверить его на телефоне', tag: 'Дизайн', p: 'Высокий', col: 'To Do' },
+      { id: 2, t: 'Подобрать цвета', tag: 'Дизайн', p: 'Низкий', col: 'To Do' },
+      { id: 3, t: 'Вёрстка навбара', tag: 'Frontend', p: 'Средний', col: 'In Progress' },
+      { id: 4, t: 'Создать репозиторий', tag: 'Git', p: 'Низкий', col: 'Done' },
+      { id: 5, t: 'Выбрать шрифт', tag: 'Дизайн', p: 'Низкий', col: 'Done' }]);
+    const dragId = ref(null), over = ref(null);
+    const col = n => tasks.value.filter(x => x.col === n);
+    function start(e, id) { dragId.value = id; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', id); }
+    function drop(n) { const t = tasks.value.find(x => x.id === dragId.value); if (t) t.col = n; dragId.value = null; over.value = null; }
+    return { msgs, draft, box, send, names, prio, col, dragId, over, start, drop };
+  }
+}).mount('#app');
+</script>
+</body></html>
